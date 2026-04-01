@@ -1,3 +1,64 @@
+
+You've hit your limit · resets 1pm (America/Chicago)
+
+/schedule
+ resume at 1pm when limit is reset.
+
+You've hit your limit · resets 1pm (America/Chicago)
+
+Continue where we left off
+
+
+Ran 4 commands, loaded tools, read a file
+Ran 4 commands, loaded tools, read a file
+Now I have full context. The last thing you asked was to update the dashboard with those client/service changes. Let me read the current file and write the updated version.
+
+
+Read 2 files
+Read 2 files
+Now I have everything I need. Let me write the updated dashboard with all the changes:
+
+
+Created a file
+Created a file
+Here's the full updated code — paste this into the GitHub editor (Cmd+A, then Cmd+V), then commit:
+
+<details> <summary><strong>Click to expand the full HTML</strong></summary>
+You can also grab it from the file at the path below.
+
+</details>
+View updated index.html
+
+Here's what changed:
+
+"Billing" → "Clients" tab — completely redesigned as a client management view with expandable cards per client.
+
+Services are now fully editable — each service has a dropdown to change its name, a revenue ($) field, and an ✕ button to remove it. An "+ Add Service" button lets you add new slots per client.
+
+Revenue replaces Retainer — each service has its own revenue amount, and the total per client is calculated automatically. The Overview tab also shows "Monthly Revenue" now.
+
+Client data updated:
+
+Client 2 → SolShine Electric (Website, SEO, Social Media)
+Client 3 → Waverly Bowl Inn (Website)
+OCC → Website, SEO, Facebook Ads, GBP, Social Media
+Paste it in and you'll see it live at https://legendaryleads.github.io/agency-dashboard/ within a minute.
+
+Index
+Code · HTML 
+
+Show in Folder
+
+
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses. Give us feedback
+Index · HTML
+
+Show in Folder
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,23 +82,71 @@
 </head>
 <body>
   <div id="root"></div>
+ 
   <script type="text/babel">
     const { useState } = React;
-
-    const CLIENTS = [
-      { id: "occ", name: "One Community Construction", contact: "—", email: "—", phone: "—", services: ["SEO", "Social Media", "GBP"], retainer: 1500, paymentStatus: "paid", paymentDue: "2026-04-01", color: "#f97316", initials: "OCC", notes: "Scheduling 3x/week on Facebook, Instagram, and GBP. Focus on before/after project photos and community projects. Prefers communication via email.", active: true },
-      { id: "client2", name: "Client Two (Placeholder)", contact: "—", email: "—", phone: "—", services: ["Social Media", "Ads", "Web Design"], retainer: 0, paymentStatus: "pending", paymentDue: "2026-04-05", color: "#8b5cf6", initials: "C2", notes: "Replace with real client info.", active: true },
-      { id: "client3", name: "Client Three (Placeholder)", contact: "—", email: "—", phone: "—", services: ["SEO", "Ads"], retainer: 0, paymentStatus: "pending", paymentDue: "2026-04-10", color: "#0ea5e9", initials: "C3", notes: "Replace with real client info.", active: true },
+ 
+    // ─── MOCK DATA ──────────────────────────────────────────────────────────────
+ 
+    const CLIENTS_INIT = [
+      {
+        id: "occ",
+        name: "One Community Construction",
+        contact: "—", email: "—", phone: "—",
+        services: [
+          { id: 1, name: "Website",      revenue: 0 },
+          { id: 2, name: "SEO",          revenue: 0 },
+          { id: 3, name: "Facebook Ads", revenue: 0 },
+          { id: 4, name: "GBP",          revenue: 0 },
+          { id: 5, name: "Social Media", revenue: 0 },
+        ],
+        paymentStatus: "paid",
+        paymentDue: "2026-04-01",
+        color: "#f97316",
+        initials: "OCC",
+        notes: "Scheduling 3x/week on Facebook, Instagram, and GBP. Focus on before/after project photos and community projects. Prefers communication via email.",
+        active: true,
+      },
+      {
+        id: "solshine",
+        name: "SolShine Electric",
+        contact: "—", email: "—", phone: "—",
+        services: [
+          { id: 1, name: "Website",      revenue: 0 },
+          { id: 2, name: "SEO",          revenue: 0 },
+          { id: 3, name: "Social Media", revenue: 0 },
+        ],
+        paymentStatus: "pending",
+        paymentDue: "2026-04-05",
+        color: "#f59e0b",
+        initials: "SSE",
+        notes: "",
+        active: true,
+      },
+      {
+        id: "waverly",
+        name: "Waverly Bowl Inn",
+        contact: "—", email: "—", phone: "—",
+        services: [
+          { id: 1, name: "Website", revenue: 0 },
+        ],
+        paymentStatus: "pending",
+        paymentDue: "2026-04-10",
+        color: "#0ea5e9",
+        initials: "WBI",
+        notes: "",
+        active: true,
+      },
     ];
-
+ 
     const INITIAL_TASKS = [
-      { id: 1, clientId: "occ",     title: "Schedule April social posts",      status: "todo",       priority: "high",   due: "2026-04-01" },
-      { id: 2, clientId: "occ",     title: "Update GBP photos",                status: "inprogress", priority: "medium", due: "2026-04-03" },
-      { id: 3, clientId: "occ",     title: "Send monthly SEO report",          status: "todo",       priority: "high",   due: "2026-04-05" },
-      { id: 4, clientId: "client2", title: "Example task — replace with real", status: "todo",       priority: "medium", due: "2026-04-10" },
-      { id: 5, clientId: "client3", title: "Example task — replace with real", status: "inprogress", priority: "low",    due: "2026-04-12" },
+      { id: 1, clientId: "occ",      title: "Schedule April social posts",       status: "todo",       priority: "high",   due: "2026-04-01" },
+      { id: 2, clientId: "occ",      title: "Update GBP photos",                 status: "inprogress", priority: "medium", due: "2026-04-03" },
+      { id: 3, clientId: "occ",      title: "Send monthly SEO report",           status: "todo",       priority: "high",   due: "2026-04-05" },
+      { id: 4, clientId: "solshine", title: "Set up social media accounts",      status: "todo",       priority: "medium", due: "2026-04-10" },
+      { id: 5, clientId: "waverly",  title: "Website review & launch",           status: "inprogress", priority: "high",   due: "2026-04-12" },
     ];
-
+ 
     const POSTS = [
       { id: 1,  clientId: "occ", date: "2026-04-02", platform: "Facebook",  content: "Spring is here! Check out our latest construction projects.", status: "scheduled" },
       { id: 2,  clientId: "occ", date: "2026-04-02", platform: "Instagram", content: "Before & after renovation shots 🏗️", status: "scheduled" },
@@ -50,94 +159,198 @@
       { id: 9,  clientId: "occ", date: "2026-04-26", platform: "Instagram", content: "New project reveal coming this week 👀", status: "scheduled" },
       { id: 10, clientId: "occ", date: "2026-04-30", platform: "GBP",       content: "May availability open — request your free quote!", status: "scheduled" },
     ];
-
-    const PLATFORM_COLORS = { Facebook: "#1877f2", Instagram: "#e1306c", GBP: "#34a853", Twitter: "#1da1f2", LinkedIn: "#0077b5" };
-    const PLATFORM_SHORT  = { Facebook: "FB", Instagram: "IG", GBP: "GBP", Twitter: "TW", LinkedIn: "LI" };
-    const SERVICE_COLORS  = { SEO: { bg: "#dcfce7", text: "#166534" }, "Social Media": { bg: "#dbeafe", text: "#1e40af" }, "Web Design": { bg: "#ede9fe", text: "#5b21b6" }, Ads: { bg: "#ffedd5", text: "#9a3412" }, GBP: { bg: "#ccfbf1", text: "#134e4a" }, Email: { bg: "#fef9c3", text: "#854d0e" } };
-    const PRIORITY_COLORS = { high: { bg: "#fee2e2", text: "#991b1b" }, medium: { bg: "#fef3c7", text: "#92400e" }, low: { bg: "#f0fdf4", text: "#166534" } };
+ 
+    // ─── CONSTANTS ──────────────────────────────────────────────────────────────
+ 
+    const PLATFORM_COLORS = {
+      Facebook: "#1877f2", Instagram: "#e1306c", GBP: "#34a853",
+      Twitter: "#1da1f2", LinkedIn: "#0077b5",
+    };
+    const PLATFORM_SHORT = {
+      Facebook: "FB", Instagram: "IG", GBP: "GBP", Twitter: "TW", LinkedIn: "LI",
+    };
+    const SERVICE_COLORS = {
+      SEO:             { bg: "#dcfce7", text: "#166534" },
+      "Social Media":  { bg: "#dbeafe", text: "#1e40af" },
+      "Web Design":    { bg: "#ede9fe", text: "#5b21b6" },
+      Ads:             { bg: "#ffedd5", text: "#9a3412" },
+      "Facebook Ads":  { bg: "#ffedd5", text: "#9a3412" },
+      GBP:             { bg: "#ccfbf1", text: "#134e4a" },
+      Email:           { bg: "#fef9c3", text: "#854d0e" },
+      Website:         { bg: "#f3e8ff", text: "#6b21a8" },
+    };
+    const PRIORITY_COLORS = {
+      high:   { bg: "#fee2e2", text: "#991b1b" },
+      medium: { bg: "#fef3c7", text: "#92400e" },
+      low:    { bg: "#f0fdf4", text: "#166534" },
+    };
     const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    const DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-
-    function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
-    function getFirstDay(y, m)    { return new Date(y, m, 1).getDay(); }
-    function formatDate(s) { if (!s) return "—"; const d = new Date(s + "T00:00:00"); return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }); }
-
+    const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+ 
+    // ─── HELPERS ────────────────────────────────────────────────────────────────
+ 
+    function getDaysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
+    function getFirstDayOfMonth(year, month) { return new Date(year, month, 1).getDay(); }
+    function formatDate(dateStr) {
+      if (!dateStr) return "—";
+      const d = new Date(dateStr + "T00:00:00");
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+    function clientTotalRevenue(client) {
+      return client.services.reduce((s, svc) => s + (Number(svc.revenue) || 0), 0);
+    }
+ 
+    // ─── SMALL COMPONENTS ───────────────────────────────────────────────────────
+ 
     function ServiceTag({ service }) {
-      const c = SERVICE_COLORS[service] || { bg: "#f3f4f6", text: "#374151" };
-      return <span style={{ background: c.bg, color: c.text, padding: "2px 9px", borderRadius: 999, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>{service}</span>;
+      const name = typeof service === "string" ? service : service.name;
+      const c = SERVICE_COLORS[name] || { bg: "#f3f4f6", text: "#374151" };
+      return (
+        <span style={{ background: c.bg, color: c.text, padding: "2px 9px", borderRadius: 999, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+          {name}
+        </span>
+      );
     }
-
+ 
     function PaymentBadge({ status }) {
-      const map = { paid: { bg: "#dcfce7", text: "#166534", label: "Paid ✓" }, pending: { bg: "#fef9c3", text: "#854d0e", label: "Pending" }, overdue: { bg: "#fee2e2", text: "#991b1b", label: "Overdue !" } };
+      const map = {
+        paid:    { bg: "#dcfce7", text: "#166534", label: "Paid ✓" },
+        pending: { bg: "#fef9c3", text: "#854d0e", label: "Pending" },
+        overdue: { bg: "#fee2e2", text: "#991b1b", label: "Overdue !" },
+      };
       const s = map[status] || map.pending;
-      return <span style={{ background: s.bg, color: s.text, padding: "3px 10px", borderRadius: 999, fontSize: 12, fontWeight: 700 }}>{s.label}</span>;
+      return (
+        <span style={{ background: s.bg, color: s.text, padding: "3px 10px", borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
+          {s.label}
+        </span>
+      );
     }
-
+ 
+    // ─── OVERVIEW TAB ───────────────────────────────────────────────────────────
+ 
     function OverviewTab({ clients }) {
-      const totalMRR = clients.reduce((s, c) => s + c.retainer, 0);
+      const totalMRR = clients.reduce((s, c) => s + clientTotalRevenue(c), 0);
       const overdueCount = clients.filter(c => c.paymentStatus === "overdue").length;
       return (
         <div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 28 }}>
-            {[{ label: "Active Clients", value: clients.length, icon: "👥", color: "#6366f1" }, { label: "Monthly Retainer", value: `$${totalMRR.toLocaleString()}`, icon: "💰", color: "#22c55e" }, { label: "Overdue Invoices", value: overdueCount, icon: "⚠️", color: overdueCount > 0 ? "#ef4444" : "#22c55e" }].map(stat => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 28 }}>
+            {[
+              { label: "Active Clients",   value: clients.length,                      icon: "👥", color: "#6366f1" },
+              { label: "Monthly Revenue",  value: `$${totalMRR.toLocaleString()}`,      icon: "💰", color: "#22c55e" },
+              { label: "Overdue Invoices", value: overdueCount,                         icon: "⚠️", color: overdueCount > 0 ? "#ef4444" : "#22c55e" },
+            ].map(stat => (
               <div key={stat.label} style={{ background: "white", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", display: "flex", alignItems: "center", gap: 16 }}>
                 <div style={{ fontSize: 30 }}>{stat.icon}</div>
-                <div><div style={{ fontSize: 26, fontWeight: 800, color: stat.color, lineHeight: 1.1 }}>{stat.value}</div><div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>{stat.label}</div></div>
-              </div>
-            ))}
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 16 }}>
-            {clients.map(client => (
-              <div key={client.id} style={{ background: "white", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07)", overflow: "hidden" }}>
-                <div style={{ height: 5, background: client.color }} />
-                <div style={{ padding: "18px 20px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 10, background: client.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: 12, flexShrink: 0 }}>{client.initials}</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{client.name}</div>
-                      <div style={{ fontSize: 12, color: "#6b7280", marginTop: 1 }}>{client.retainer > 0 ? `$${client.retainer.toLocaleString()}/mo` : "No retainer set"}</div>
-                    </div>
-                    <PaymentBadge status={client.paymentStatus} />
-                  </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>{client.services.map(s => <ServiceTag key={s} service={s} />)}</div>
+                <div>
+                  <div style={{ fontSize: 26, fontWeight: 800, color: stat.color, lineHeight: 1.1 }}>{stat.value}</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>{stat.label}</div>
                 </div>
               </div>
             ))}
           </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
+            {clients.map(client => {
+              const rev = clientTotalRevenue(client);
+              return (
+                <div key={client.id} style={{ background: "white", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07)", overflow: "hidden" }}>
+                  <div style={{ height: 5, background: client.color }} />
+                  <div style={{ padding: "18px 20px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 10, background: client.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: 12, flexShrink: 0 }}>
+                        {client.initials}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{client.name}</div>
+                        <div style={{ fontSize: 12, color: "#6b7280", marginTop: 1 }}>{rev > 0 ? `$${rev.toLocaleString()}/mo` : "No revenue set"}</div>
+                      </div>
+                      <PaymentBadge status={client.paymentStatus} />
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                      {client.services.map(s => <ServiceTag key={s.id} service={s} />)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       );
     }
-
+ 
+    // ─── TASKS TAB ──────────────────────────────────────────────────────────────
+ 
     function TasksTab({ clients }) {
       const [tasks, setTasks] = useState(INITIAL_TASKS);
       const [filterClient, setFilterClient] = useState("all");
       const [showAdd, setShowAdd] = useState(false);
       const [newTask, setNewTask] = useState({ title: "", clientId: clients[0].id, priority: "medium", due: "" });
+ 
       const filtered = filterClient === "all" ? tasks : tasks.filter(t => t.clientId === filterClient);
-      const cols = ["todo","inprogress","done"];
-      const colMeta = { todo: { label: "To Do", color: "#6366f1" }, inprogress: { label: "In Progress", color: "#f59e0b" }, done: { label: "Done", color: "#22c55e" } };
+      const cols = ["todo", "inprogress", "done"];
+      const colMeta = {
+        todo:       { label: "To Do",       color: "#6366f1" },
+        inprogress: { label: "In Progress", color: "#f59e0b" },
+        done:       { label: "Done",        color: "#22c55e" },
+      };
       const nextStatus = { todo: "inprogress", inprogress: "done", done: "todo" };
       const nextLabel  = { todo: "→ Start", inprogress: "→ Complete", done: "↺ Reopen" };
-      const getClient = id => clients.find(c => c.id === id);
-      function addTask() { if (!newTask.title.trim()) return; setTasks(prev => [...prev, { ...newTask, id: Date.now(), status: "todo" }]); setNewTask({ title: "", clientId: clients[0].id, priority: "medium", due: "" }); setShowAdd(false); }
+ 
+      function getClient(id) { return clients.find(c => c.id === id); }
+      function addTask() {
+        if (!newTask.title.trim()) return;
+        setTasks(prev => [...prev, { ...newTask, id: Date.now(), status: "todo" }]);
+        setNewTask({ title: "", clientId: clients[0].id, priority: "medium", due: "" });
+        setShowAdd(false);
+      }
       function moveTask(id, status) { setTasks(prev => prev.map(t => t.id === id ? { ...t, status } : t)); }
       function deleteTask(id) { setTasks(prev => prev.filter(t => t.id !== id)); }
+ 
       return (
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-            <select value={filterClient} onChange={e => setFilterClient(e.target.value)} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13, background: "white", color: "#374151" }}>
+            <select value={filterClient} onChange={e => setFilterClient(e.target.value)}
+              style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13, background: "white", color: "#374151" }}>
               <option value="all">All Clients</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <button onClick={() => setShowAdd(v => !v)} style={{ marginLeft: "auto", background: "#6366f1", color: "white", border: "none", padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>+ Add Task</button>
+            <div style={{ marginLeft: "auto" }}>
+              <button onClick={() => setShowAdd(v => !v)}
+                style={{ background: "#6366f1", color: "white", border: "none", padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                + Add Task
+              </button>
+            </div>
           </div>
+ 
           {showAdd && (
             <div style={{ background: "white", borderRadius: 12, padding: 20, marginBottom: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
-                <div style={{ flex: "2 1 200px" }}><label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Task</label><input value={newTask.title} onChange={e => setNewTask(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }} /></div>
-                <div style={{ flex: "1 1 140px" }}><label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Client</label><select value={newTask.clientId} onChange={e => setNewTask(p => ({ ...p, clientId: e.target.value }))} style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }}>{clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
-                <div style={{ flex: "0 1 110px" }}><label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Priority</label><select value={newTask.priority} onChange={e => setNewTask(p => ({ ...p, priority: e.target.value }))} style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }}><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
-                <div style={{ flex: "0 1 140px" }}><label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Due Date</label><input type="date" value={newTask.due} onChange={e => setNewTask(p => ({ ...p, due: e.target.value }))} style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }} /></div>
+                <div style={{ flex: "2 1 200px" }}>
+                  <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Task</label>
+                  <input value={newTask.title} onChange={e => setNewTask(p => ({ ...p, title: e.target.value }))}
+                    placeholder="What needs to be done?"
+                    style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }} />
+                </div>
+                <div style={{ flex: "1 1 140px" }}>
+                  <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Client</label>
+                  <select value={newTask.clientId} onChange={e => setNewTask(p => ({ ...p, clientId: e.target.value }))}
+                    style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }}>
+                    {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div style={{ flex: "0 1 110px" }}>
+                  <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Priority</label>
+                  <select value={newTask.priority} onChange={e => setNewTask(p => ({ ...p, priority: e.target.value }))}
+                    style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }}>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+                <div style={{ flex: "0 1 140px" }}>
+                  <label style={{ fontSize: 12, color: "#6b7280", display: "block", marginBottom: 4, fontWeight: 600 }}>Due Date</label>
+                  <input type="date" value={newTask.due} onChange={e => setNewTask(p => ({ ...p, due: e.target.value }))}
+                    style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }} />
+                </div>
               </div>
               <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
                 <button onClick={addTask} style={{ background: "#6366f1", color: "white", border: "none", padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Save Task</button>
@@ -145,7 +358,8 @@
               </div>
             </div>
           )}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+ 
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
             {cols.map(col => {
               const colTasks = filtered.filter(t => t.status === col);
               const meta = colMeta[col];
@@ -169,8 +383,12 @@
                             {client && <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: "white", background: client.color, padding: "1px 7px", borderRadius: 999 }}>{client.initials}</span>}
                           </div>
                           <div style={{ display: "flex", gap: 6 }}>
-                            <button onClick={() => moveTask(task.id, nextStatus[col])} style={{ flex: 1, background: "#f3f4f6", color: "#374151", border: "none", padding: "5px 0", borderRadius: 6, fontSize: 11, cursor: "pointer", fontWeight: 600 }}>{nextLabel[col]}</button>
-                            <button onClick={() => deleteTask(task.id)} style={{ background: "#fff0f0", color: "#ef4444", border: "none", padding: "5px 10px", borderRadius: 6, fontSize: 11, cursor: "pointer" }}>✕</button>
+                            <button onClick={() => moveTask(task.id, nextStatus[col])}
+                              style={{ flex: 1, background: "#f3f4f6", color: "#374151", border: "none", padding: "5px 0", borderRadius: 6, fontSize: 11, cursor: "pointer", fontWeight: 600 }}>
+                              {nextLabel[col]}
+                            </button>
+                            <button onClick={() => deleteTask(task.id)}
+                              style={{ background: "#fff0f0", color: "#ef4444", border: "none", padding: "5px 10px", borderRadius: 6, fontSize: 11, cursor: "pointer" }}>✕</button>
                           </div>
                         </div>
                       );
@@ -183,54 +401,187 @@
         </div>
       );
     }
-
-    function BillingTab({ clients }) {
-      const [clientList, setClientList] = useState(clients);
-      const totalMRR = clientList.reduce((s, c) => s + c.retainer, 0);
-      function cycleStatus(id) {
-        const cycle = ["paid","pending","overdue"];
-        setClientList(prev => prev.map(c => c.id !== id ? c : { ...c, paymentStatus: cycle[(cycle.indexOf(c.paymentStatus) + 1) % cycle.length] }));
+ 
+    // ─── CLIENTS TAB (formerly Billing) ─────────────────────────────────────────
+ 
+    const SERVICE_OPTIONS = ["Website", "SEO", "Social Media", "Facebook Ads", "GBP", "Ads", "Email", "Web Design"];
+ 
+    function ClientsTab() {
+      const [clients, setClients] = useState(CLIENTS_INIT);
+ 
+      function cycleStatus(clientId) {
+        const cycle = ["paid", "pending", "overdue"];
+        setClients(prev => prev.map(c => {
+          if (c.id !== clientId) return c;
+          const next = cycle[(cycle.indexOf(c.paymentStatus) + 1) % cycle.length];
+          return { ...c, paymentStatus: next };
+        }));
       }
+ 
+      function updateServiceName(clientId, svcId, name) {
+        setClients(prev => prev.map(c => {
+          if (c.id !== clientId) return c;
+          return { ...c, services: c.services.map(s => s.id === svcId ? { ...s, name } : s) };
+        }));
+      }
+ 
+      function updateServiceRevenue(clientId, svcId, revenue) {
+        setClients(prev => prev.map(c => {
+          if (c.id !== clientId) return c;
+          return { ...c, services: c.services.map(s => s.id === svcId ? { ...s, revenue: revenue === "" ? "" : Number(revenue) } : s) };
+        }));
+      }
+ 
+      function addService(clientId) {
+        setClients(prev => prev.map(c => {
+          if (c.id !== clientId) return c;
+          const newId = Date.now();
+          return { ...c, services: [...c.services, { id: newId, name: "New Service", revenue: 0 }] };
+        }));
+      }
+ 
+      function deleteService(clientId, svcId) {
+        setClients(prev => prev.map(c => {
+          if (c.id !== clientId) return c;
+          return { ...c, services: c.services.filter(s => s.id !== svcId) };
+        }));
+      }
+ 
+      const totalRevenue = clients.reduce((s, c) => s + clientTotalRevenue(c), 0);
+ 
       return (
         <div>
-          <div style={{ background: "white", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07)", overflow: "hidden" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead><tr style={{ background: "#f9fafb" }}>{["Client","Services","Monthly Retainer","Status","Due Date"].map(h => <th key={h} style={{ padding: "12px 20px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.06em", borderBottom: "1px solid #e5e7eb" }}>{h}</th>)}</tr></thead>
-              <tbody>
-                {clientList.map((client, i) => (
-                  <tr key={client.id} style={{ borderBottom: "1px solid #f3f4f6", background: i % 2 === 0 ? "white" : "#fafafa" }}>
-                    <td style={{ padding: "16px 20px" }}><div style={{ display: "flex", alignItems: "center", gap: 10 }}><div style={{ width: 36, height: 36, borderRadius: 8, background: client.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 11, flexShrink: 0 }}>{client.initials}</div><span style={{ fontWeight: 600, color: "#111827", fontSize: 14 }}>{client.name}</span></div></td>
-                    <td style={{ padding: "16px 20px" }}><div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>{client.services.map(s => <ServiceTag key={s} service={s} />)}</div></td>
-                    <td style={{ padding: "16px 20px", fontWeight: 700, fontSize: 15, color: "#111827" }}>{client.retainer > 0 ? `$${client.retainer.toLocaleString()}` : <span style={{ color: "#9ca3af", fontWeight: 400 }}>—</span>}</td>
-                    <td style={{ padding: "16px 20px" }}><button onClick={() => cycleStatus(client.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}><PaymentBadge status={client.paymentStatus} /></button></td>
-                    <td style={{ padding: "16px 20px", fontSize: 13, fontWeight: 500, color: client.paymentStatus === "overdue" ? "#ef4444" : "#6b7280" }}>{formatDate(client.paymentDue)}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot><tr style={{ borderTop: "2px solid #e5e7eb", background: "#f9fafb" }}><td colSpan={2} style={{ padding: "14px 20px", fontWeight: 700, color: "#374151", fontSize: 14 }}>Total Monthly Revenue</td><td style={{ padding: "14px 20px", fontWeight: 800, fontSize: 17, color: "#22c55e" }}>${totalMRR.toLocaleString()}</td><td colSpan={2} /></tr></tfoot>
-            </table>
+          {/* Summary bar */}
+          <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+            {[
+              { label: "Total Clients",   value: clients.length,                    color: "#6366f1", icon: "👥" },
+              { label: "Monthly Revenue", value: `$${totalRevenue.toLocaleString()}`, color: "#22c55e", icon: "💰" },
+              { label: "Overdue",         value: clients.filter(c => c.paymentStatus === "overdue").length, color: "#ef4444", icon: "⚠️" },
+            ].map(s => (
+              <div key={s.label} style={{ background: "white", borderRadius: 12, padding: "16px 22px", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", display: "flex", alignItems: "center", gap: 14, flex: "1 1 160px" }}>
+                <span style={{ fontSize: 24 }}>{s.icon}</span>
+                <div>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: s.color }}>{s.value}</div>
+                  <div style={{ fontSize: 12, color: "#6b7280" }}>{s.label}</div>
+                </div>
+              </div>
+            ))}
           </div>
-          <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 10 }}>Tip: click a status badge to cycle it between Paid → Pending → Overdue.</p>
+ 
+          {/* Client cards */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {clients.map(client => {
+              const rev = clientTotalRevenue(client);
+              return (
+                <div key={client.id} style={{ background: "white", borderRadius: 14, boxShadow: "0 1px 4px rgba(0,0,0,0.08)", overflow: "hidden" }}>
+                  {/* Color bar + header */}
+                  <div style={{ height: 5, background: client.color }} />
+                  <div style={{ padding: "18px 24px", display: "flex", alignItems: "center", gap: 14, borderBottom: "1px solid #f3f4f6" }}>
+                    <div style={{ width: 46, height: 46, borderRadius: 12, background: client.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: 13, flexShrink: 0 }}>
+                      {client.initials}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: 16, color: "#111827" }}>{client.name}</div>
+                      <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>
+                        Due {formatDate(client.paymentDue)}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 20, fontWeight: 800, color: "#22c55e" }}>{rev > 0 ? `$${rev.toLocaleString()}` : "—"}</div>
+                        <div style={{ fontSize: 11, color: "#9ca3af" }}>/ month</div>
+                      </div>
+                      <button onClick={() => cycleStatus(client.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} title="Click to cycle payment status">
+                        <PaymentBadge status={client.paymentStatus} />
+                      </button>
+                    </div>
+                  </div>
+ 
+                  {/* Services section */}
+                  <div style={{ padding: "16px 24px" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>
+                      Services &amp; Revenue
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {client.services.map(svc => {
+                        const c = SERVICE_COLORS[svc.name] || { bg: "#f3f4f6", text: "#374151" };
+                        return (
+                          <div key={svc.id} style={{ display: "flex", alignItems: "center", gap: 10, background: "#fafafa", borderRadius: 8, padding: "8px 12px" }}>
+                            {/* Service name — dropdown */}
+                            <select
+                              value={svc.name}
+                              onChange={e => updateServiceName(client.id, svc.id, e.target.value)}
+                              style={{ flex: "1 1 160px", padding: "5px 8px", borderRadius: 7, border: "1px solid #e5e7eb", fontSize: 12, fontWeight: 600, color: c.text, background: c.bg, cursor: "pointer" }}>
+                              {SERVICE_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                              {!SERVICE_OPTIONS.includes(svc.name) && <option value={svc.name}>{svc.name}</option>}
+                            </select>
+                            {/* Revenue */}
+                            <div style={{ display: "flex", alignItems: "center", gap: 4, flex: "0 0 130px" }}>
+                              <span style={{ color: "#9ca3af", fontSize: 13, fontWeight: 600 }}>$</span>
+                              <input
+                                type="number"
+                                min="0"
+                                value={svc.revenue === 0 && svc.revenue !== "" ? "" : svc.revenue}
+                                placeholder="0"
+                                onChange={e => updateServiceRevenue(client.id, svc.id, e.target.value)}
+                                style={{ width: "100%", padding: "5px 8px", borderRadius: 7, border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#111827" }} />
+                              <span style={{ fontSize: 11, color: "#9ca3af", whiteSpace: "nowrap" }}>/mo</span>
+                            </div>
+                            {/* Delete service */}
+                            <button
+                              onClick={() => deleteService(client.id, svc.id)}
+                              title="Remove service"
+                              style={{ background: "#fff0f0", color: "#ef4444", border: "none", borderRadius: 6, width: 28, height: 28, cursor: "pointer", fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              ✕
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Add service */}
+                    <button
+                      onClick={() => addService(client.id)}
+                      style={{ marginTop: 10, background: "none", border: "1.5px dashed #d1d5db", color: "#6b7280", borderRadius: 8, padding: "7px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", width: "100%", textAlign: "center" }}>
+                      + Add Service
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 14 }}>Tip: click a payment status badge to cycle it between Paid → Pending → Overdue. Edit service names and revenue inline.</p>
         </div>
       );
     }
-
+ 
+    // ─── CALENDAR TAB ───────────────────────────────────────────────────────────
+ 
     function CalendarTab({ clients, posts }) {
       const today = new Date();
       const [year, setYear] = useState(2026);
       const [month, setMonth] = useState(3);
       const [selectedClient, setSelectedClient] = useState("all");
+ 
       const filteredPosts = selectedClient === "all" ? posts : posts.filter(p => p.clientId === selectedClient);
       const daysInMonth = getDaysInMonth(year, month);
-      const firstDay = getFirstDay(year, month);
+      const firstDay = getFirstDayOfMonth(year, month);
+ 
       const cells = [];
       for (let i = 0; i < firstDay; i++) cells.push(null);
       for (let d = 1; d <= daysInMonth; d++) cells.push(d);
       while (cells.length % 7 !== 0) cells.push(null);
-      function prevMonth() { if (month === 0) { setMonth(11); setYear(y => y-1); } else setMonth(m => m-1); }
-      function nextMonth() { if (month === 11) { setMonth(0); setYear(y => y+1); } else setMonth(m => m+1); }
-      function getPostsForDay(day) { if (!day) return []; const ds = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`; return filteredPosts.filter(p => p.date === ds); }
-      const getClient = id => clients.find(c => c.id === id);
+ 
+      function prevMonth() { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }
+      function nextMonth() { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); }
+ 
+      function getPostsForDay(day) {
+        if (!day) return [];
+        const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        return filteredPosts.filter(p => p.date === dateStr);
+      }
+ 
+      function getClient(id) { return clients.find(c => c.id === id); }
+ 
       return (
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
@@ -239,64 +590,91 @@
             <button onClick={nextMonth} style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: "7px 13px", cursor: "pointer", fontSize: 16, color: "#374151" }}>›</button>
             <div style={{ marginLeft: "auto", display: "flex", flexWrap: "wrap", gap: 6 }}>
               {[{ id: "all", initials: "ALL", color: "#6366f1" }, ...clients].map(c => (
-                <button key={c.id} onClick={() => setSelectedClient(c.id)} style={{ padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, cursor: "pointer", border: "none", background: selectedClient === c.id ? c.color : "#f3f4f6", color: selectedClient === c.id ? "white" : "#374151" }}>{c.initials}</button>
+                <button key={c.id} onClick={() => setSelectedClient(c.id)}
+                  style={{ padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, cursor: "pointer", border: "none", background: selectedClient === c.id ? c.color : "#f3f4f6", color: selectedClient === c.id ? "white" : "#374151" }}>
+                  {c.initials}
+                </button>
               ))}
             </div>
           </div>
+ 
           <div style={{ background: "white", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07)", overflow: "hidden" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", borderBottom: "1px solid #e5e7eb", background: "#f9fafb" }}>
-              {DAYS.map(d => <div key={d} style={{ padding: "10px 0", textAlign: "center", fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em" }}>{d}</div>)}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: "1px solid #e5e7eb", background: "#f9fafb" }}>
+              {DAYS.map(d => (
+                <div key={d} style={{ padding: "10px 0", textAlign: "center", fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em" }}>{d}</div>
+              ))}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)" }}>
               {cells.map((day, i) => {
                 const dayPosts = getPostsForDay(day);
                 const isToday = day && year === today.getFullYear() && month === today.getMonth() && day === today.getDate();
+                const isWeekend = i % 7 === 0 || i % 7 === 6;
                 return (
-                  <div key={i} style={{ minHeight: 96, padding: "7px 6px", borderRight: (i+1)%7!==0 ? "1px solid #f3f4f6" : "none", borderBottom: "1px solid #f3f4f6", background: !day ? "#fafafa" : i%7===0||i%7===6 ? "#fdfcff" : "white" }}>
-                    {day && <>
-                      <div style={{ width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: isToday ? 800 : 400, background: isToday ? "#6366f1" : "transparent", color: isToday ? "white" : "#374151", marginBottom: 4 }}>{day}</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                        {dayPosts.map(post => {
-                          const pColor = PLATFORM_COLORS[post.platform] || "#6366f1";
-                          const client = getClient(post.clientId);
-                          const isDraft = post.status === "draft";
-                          return (
-                            <div key={post.id} title={`${post.platform}${isDraft?" (draft)":""}: ${post.content}`} style={{ background: isDraft ? "#f9fafb" : pColor+"18", borderLeft: `3px solid ${isDraft?"#d1d5db":pColor}`, borderRadius: "0 4px 4px 0", padding: "2px 5px", fontSize: 10, fontWeight: 700, color: isDraft ? "#9ca3af" : pColor, display: "flex", alignItems: "center", gap: 3, opacity: isDraft ? 0.7 : 1 }}>
-                              <span>{PLATFORM_SHORT[post.platform]||post.platform}</span>
-                              {isDraft && <span style={{ fontSize: 9, opacity: 0.7 }}>draft</span>}
-                              {client && selectedClient === "all" && <span style={{ marginLeft: "auto", width: 6, height: 6, borderRadius: "50%", background: client.color, flexShrink: 0, display: "inline-block" }} />}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </>}
+                  <div key={i} style={{ minHeight: 96, padding: "7px 6px", borderRight: (i + 1) % 7 !== 0 ? "1px solid #f3f4f6" : "none", borderBottom: "1px solid #f3f4f6", background: !day ? "#fafafa" : isWeekend ? "#fdfcff" : "white" }}>
+                    {day && (
+                      <>
+                        <div style={{ width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: isToday ? 800 : 400, background: isToday ? "#6366f1" : "transparent", color: isToday ? "white" : "#374151", marginBottom: 4 }}>
+                          {day}
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                          {dayPosts.map(post => {
+                            const pColor = PLATFORM_COLORS[post.platform] || "#6366f1";
+                            const client = getClient(post.clientId);
+                            const isDraft = post.status === "draft";
+                            return (
+                              <div key={post.id} title={`${post.platform}${isDraft ? " (draft)" : ""}: ${post.content}`}
+                                style={{ background: isDraft ? "#f9fafb" : pColor + "18", borderLeft: `3px solid ${isDraft ? "#d1d5db" : pColor}`, borderRadius: "0 4px 4px 0", padding: "2px 5px", fontSize: 10, fontWeight: 700, color: isDraft ? "#9ca3af" : pColor, display: "flex", alignItems: "center", gap: 3, opacity: isDraft ? 0.7 : 1 }}>
+                                <span>{PLATFORM_SHORT[post.platform] || post.platform}</span>
+                                {isDraft && <span style={{ fontSize: 9, opacity: 0.7 }}>draft</span>}
+                                {client && selectedClient === "all" && (
+                                  <span style={{ marginLeft: "auto", width: 6, height: 6, borderRadius: "50%", background: client.color, flexShrink: 0, display: "inline-block" }} />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                 );
               })}
             </div>
           </div>
+ 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 14 }}>
             <span style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600 }}>Platforms:</span>
-            {Object.entries(PLATFORM_COLORS).map(([name, color]) => <div key={name} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6b7280" }}><div style={{ width: 10, height: 10, borderRadius: 3, background: color }} />{name}</div>)}
-            <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#9ca3af" }}><div style={{ width: 10, height: 10, borderRadius: 3, background: "#e5e7eb" }} />Draft</div>
+            {Object.entries(PLATFORM_COLORS).map(([name, color]) => (
+              <div key={name} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6b7280" }}>
+                <div style={{ width: 10, height: 10, borderRadius: 3, background: color }} />
+                {name}
+              </div>
+            ))}
+            <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#9ca3af" }}>
+              <div style={{ width: 10, height: 10, borderRadius: 3, background: "#e5e7eb" }} />Draft
+            </div>
           </div>
         </div>
       );
     }
-
+ 
+    // ─── NOTES TAB ──────────────────────────────────────────────────────────────
+ 
     function NotesTab({ clients }) {
       const [selectedId, setSelectedId] = useState(clients[0].id);
       const [notes, setNotes] = useState(Object.fromEntries(clients.map(c => [c.id, c.notes])));
       const [saved, setSaved] = useState(false);
       const client = clients.find(c => c.id === selectedId);
+ 
       function save() { setSaved(true); setTimeout(() => setSaved(false), 2000); }
+ 
       return (
         <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: 20, alignItems: "start" }}>
           <div style={{ background: "white", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07)", padding: 8 }}>
             {clients.map(c => (
-              <button key={c.id} onClick={() => setSelectedId(c.id)} style={{ width: "100%", textAlign: "left", padding: "10px 12px", borderRadius: 8, border: "none", cursor: "pointer", background: selectedId===c.id ? c.color+"14" : "transparent", borderLeft: `3px solid ${selectedId===c.id ? c.color : "transparent"}`, display: "flex", alignItems: "center", gap: 10, marginBottom: 2 }}>
+              <button key={c.id} onClick={() => setSelectedId(c.id)}
+                style={{ width: "100%", textAlign: "left", padding: "10px 12px", borderRadius: 8, border: "none", cursor: "pointer", background: selectedId === c.id ? c.color + "14" : "transparent", borderLeft: `3px solid ${selectedId === c.id ? c.color : "transparent"}`, display: "flex", alignItems: "center", gap: 10, marginBottom: 2 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 8, background: c.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: 10, flexShrink: 0 }}>{c.initials}</div>
-                <span style={{ fontSize: 13, lineHeight: 1.3, fontWeight: selectedId===c.id ? 700 : 500, color: "#111827" }}>{c.name}</span>
+                <span style={{ fontSize: 13, lineHeight: 1.3, fontWeight: selectedId === c.id ? 700 : 500, color: "#111827" }}>{c.name}</span>
               </button>
             ))}
           </div>
@@ -304,9 +682,14 @@
             <div style={{ background: "white", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07)", padding: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: client.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: 12 }}>{client.initials}</div>
-                <div><div style={{ fontWeight: 700, fontSize: 15, color: "#111827" }}>{client.name}</div><div style={{ fontSize: 12, color: "#9ca3af" }}>Client notes</div></div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: "#111827" }}>{client.name}</div>
+                  <div style={{ fontSize: 12, color: "#9ca3af" }}>Client notes</div>
+                </div>
               </div>
-              <textarea value={notes[selectedId]||""} onChange={e => setNotes(prev => ({ ...prev, [selectedId]: e.target.value }))} rows={14} placeholder="Add notes, preferences, context, and reminders for this client..." style={{ width: "100%", padding: "12px 14px", borderRadius: 10, border: "1px solid #e5e7eb", fontSize: 13, color: "#374151", lineHeight: 1.8, resize: "vertical", fontFamily: "inherit" }} />
+              <textarea value={notes[selectedId] || ""} onChange={e => setNotes(prev => ({ ...prev, [selectedId]: e.target.value }))}
+                rows={14} placeholder="Add notes, preferences, context, and reminders for this client..."
+                style={{ width: "100%", padding: "12px 14px", borderRadius: 10, border: "1px solid #e5e7eb", fontSize: 13, color: "#374151", lineHeight: 1.8, resize: "vertical", fontFamily: "inherit" }} />
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
                 <button onClick={save} style={{ background: "#6366f1", color: "white", border: "none", padding: "9px 22px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Save Notes</button>
                 {saved && <span style={{ fontSize: 13, color: "#22c55e", fontWeight: 700 }}>✓ Saved!</span>}
@@ -316,32 +699,52 @@
         </div>
       );
     }
-
+ 
+    // ─── MAIN APP ───────────────────────────────────────────────────────────────
+ 
     function Dashboard() {
       const [tab, setTab] = useState("overview");
-      const tabs = [{ id: "overview", label: "Overview", icon: "📊" }, { id: "tasks", label: "Tasks", icon: "✅" }, { id: "billing", label: "Billing", icon: "💰" }, { id: "calendar", label: "Calendar", icon: "📅" }, { id: "notes", label: "Notes", icon: "📝" }];
+      const tabs = [
+        { id: "overview", label: "Overview",  icon: "📊" },
+        { id: "tasks",    label: "Tasks",     icon: "✅" },
+        { id: "clients",  label: "Clients",   icon: "👥" },
+        { id: "calendar", label: "Calendar",  icon: "📅" },
+        { id: "notes",    label: "Notes",     icon: "📝" },
+      ];
       return (
-        <div style={{ fontFamily: "'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", minHeight: "100vh", background: "#f1f5f9" }}>
+        <div style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", minHeight: "100vh", background: "#f1f5f9" }}>
           <div style={{ background: "#16162a", padding: "0 28px", display: "flex", alignItems: "center", height: 56, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
-            <div style={{ fontWeight: 800, fontSize: 15, color: "white", letterSpacing: "-0.3px", display: "flex", alignItems: "center", gap: 8 }}><span style={{ fontSize: 18 }}>⚡</span> Legendary Leads</div>
+            <div style={{ fontWeight: 800, fontSize: 15, color: "white", letterSpacing: "-0.3px", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 18 }}>⚡</span> Legendary Leads
+            </div>
             <div style={{ marginLeft: 14, fontSize: 12, color: "#6b7280", borderLeft: "1px solid #2d2d4a", paddingLeft: 14 }}>Agency Dashboard</div>
-            <div style={{ marginLeft: "auto", fontSize: 12, color: "#6b7280" }}>{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</div>
+            <div style={{ marginLeft: "auto", fontSize: 12, color: "#6b7280" }}>
+              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
+            </div>
           </div>
           <div style={{ background: "white", borderBottom: "1px solid #e5e7eb", padding: "0 28px", display: "flex", gap: 2 }}>
-            {tabs.map(t => <button key={t.id} onClick={() => setTab(t.id)} style={{ background: "none", border: "none", padding: "14px 18px", cursor: "pointer", fontSize: 13, fontWeight: tab===t.id ? 700 : 500, color: tab===t.id ? "#6366f1" : "#6b7280", borderBottom: tab===t.id ? "2px solid #6366f1" : "2px solid transparent", display: "flex", alignItems: "center", gap: 7 }}>{t.icon} {t.label}</button>)}
+            {tabs.map(t => (
+              <button key={t.id} onClick={() => setTab(t.id)}
+                style={{ background: "none", border: "none", padding: "14px 18px", cursor: "pointer", fontSize: 13, fontWeight: tab === t.id ? 700 : 500, color: tab === t.id ? "#6366f1" : "#6b7280", borderBottom: tab === t.id ? "2px solid #6366f1" : "2px solid transparent", display: "flex", alignItems: "center", gap: 7 }}>
+                {t.icon} {t.label}
+              </button>
+            ))}
           </div>
           <div style={{ padding: "28px", maxWidth: 1200, margin: "0 auto" }}>
-            {tab === "overview" && <OverviewTab clients={CLIENTS} />}
-            {tab === "tasks"    && <TasksTab clients={CLIENTS} />}
-            {tab === "billing"  && <BillingTab clients={CLIENTS} />}
-            {tab === "calendar" && <CalendarTab clients={CLIENTS} posts={POSTS} />}
-            {tab === "notes"    && <NotesTab clients={CLIENTS} />}
+            {tab === "overview" && <OverviewTab clients={CLIENTS_INIT} />}
+            {tab === "tasks"    && <TasksTab clients={CLIENTS_INIT} />}
+            {tab === "clients"  && <ClientsTab />}
+            {tab === "calendar" && <CalendarTab clients={CLIENTS_INIT} posts={POSTS} />}
+            {tab === "notes"    && <NotesTab clients={CLIENTS_INIT} />}
           </div>
         </div>
       );
     }
-
+ 
     ReactDOM.createRoot(document.getElementById("root")).render(<Dashboard />);
   </script>
 </body>
 </html>
+ 
+
+
